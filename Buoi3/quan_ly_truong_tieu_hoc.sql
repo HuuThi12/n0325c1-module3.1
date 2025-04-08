@@ -175,6 +175,9 @@ select * from hoc_sinh ORDER BY ho_ten_hs desc , dia_chi desc , ho_ten_ph asc;
 
 -- Câu 6: Luyện tập về JOIN 2 bảng
 -- a. Liệt kê ma_hoc_sinh, ho_ten_hoc_sinh, gioi_tinh, ma_lop, ten_lop, ma_gvcn của tất cả học sinh trong trường.
+select hs.ma_hs, hs.ho_ten_hs, hs.gioi_tinh, hs.ma_lop, lop.ten_lop, lop.ma_gvcn
+from hoc_sinh hs
+inner join lop on hs.ma_lop = lop.ma_lop;
 -- b. Liệt kê ma_hoc_sinh, ho_ten_hoc_sinh, hoc_ky, ma_mon_hoc, diem_thi_giua_ky, diem_thi_cuoi_ky của tất cả học sinh và các môn học có kết quả tương ứng với từng học sinh trong trường.
 -- c. Liệt kê ma_giao_vien, ho_ten_giao_vien, ma_lop, ma_mon_hoc, hoc_ky của những giáo viên đã được phân công phụ trách ít nhất một môn học.
 -- d. Suy nghĩ về yêu cầu a ở trên: Nếu học sinh chưa được phân lớp thì liệu có liệt kê được học sinh đó không?
