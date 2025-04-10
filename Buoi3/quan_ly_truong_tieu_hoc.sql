@@ -102,7 +102,7 @@ select distinct ma_mh from phu_trach_bo_mon where hoc_ky = 'Học Kỳ 1';
 
 -- câu 3 Like
 -- a. Những học sinh có họ bắt đầu bằng từ Nguyễn.
-select * from hoc_sinh where ho_ten_hs like "Nguyễn%";
+select * from hoc_sinh where ho_ten_hs like "Nguyễn%"; -- 'Hòa %' ví dụ họ bắt đầu Hoành chỉ lấy ra họ Hòa nếu dùng 'Hòa%' thì sẽ lấy lun ra họ hoành
 
 -- b. Những học sinh có họ kết thúc bằng từ Nở.
 SELECT * FROM hoc_sinh WHERE  ho_ten_hs LIKE  "%Nở";
@@ -111,17 +111,16 @@ SELECT * FROM hoc_sinh WHERE  ho_ten_hs LIKE  "%Nở";
 select * from hoc_sinh where ho_ten_hs like "%Thị%";
 
 -- d. Những học sinh chứa từ Thị ở giữa (không được chửa ở đầu và ở cuối).
-select * from hoc_sinh where ho_ten_hs like "%Thị%";
+select * from hoc_sinh where ho_ten_hs like "%Thị%" and ho_ten_hs not like "Thị%" and ho_ten_hs not like "%Thị";
 
 -- e. Những học sinh có họ tên với độ dài là 30 ký tự (kể cả khoảng trắng).
--- không được
-SELECT * FROM hoc_sinh WHERE length(ho_ten_hs) = 30;
+SELECT * FROM hoc_sinh WHERE char_length(ho_ten_hs) = 30;
 
 -- f. Những học sinh có họ tên với độ dài tối đa là 30 ký tự.
-SELECT * FROM hoc_sinh WHERE length(ho_ten_hs) <= 30;
+SELECT * FROM hoc_sinh WHERE char_length(ho_ten_hs) <= 30;
 
 -- g. Những học sinh có họ tên với độ dài tối đa 30 ký tự và bắt đầu bằng ký tự N.
-SELECT * FROM hoc_sinh WHERE length(ho_ten_hs) <= 30 and ho_ten_hs like'N%';
+SELECT * FROM hoc_sinh WHERE char_length(ho_ten_hs) <= 30 and ho_ten_hs like'N%';
 
 -- h. Những học sinh có họ tên bắt đầu bằng các ký tự: N, T, V.
 SELECT * FROM hoc_sinh WHERE ho_ten_hs like 'N%' or ho_ten_hs like 'T%' or ho_ten_hs like 'V%' ;
@@ -190,8 +189,55 @@ from giao_vien gv
 inner join  phu_trach_bo_mon pt on gv.ma_gv = pt.ma_gvpt;
 
 -- d. Suy nghĩ về yêu cầu a ở trên: Nếu học sinh chưa được phân lớp thì liệu có liệt kê được học sinh đó không?
+-- Không. vì không có cột dữ liệu chung
+
 -- e. Suy nghĩ về yêu cầu b ở trên: Nếu học sinh chưa có kết quả thi của môn nào cả thì liệu có liệt kê được học sinh đó không?
+-- được
+
 -- f. Suy nghĩ về yêu cầu c ở trên: Nếu giáo viên chưa phụ trách một môn nào cả thì liệu có liệt kê được giáo viên đó không?
+-- được
+
+-- Câu 6: Luyện tập về JOIN nhiều bảng
+-- a. MaHS, HoTenHS, GioiTinh, MaLop, TenLop, NamHoc, , HoTenGV (chủ nhiệm) của học sinh trong trường.
+select hs.ma_hs, hs.ho_ten_hs, hs.gioi_tinh, lop.ma_lop, lop.ten_lop, lop.nam_hoc, gv.ho_ten_gv
+from hoc_sinh hs
+join  lop on hs.ma_lop = lop.ma_lop
+inner join giao_vien gv on lop.ma_gvcn = gv.ma_gv;
+
+-- b. MaHS, HoTenHS, Hocky, MaMH, TenMH, DiemThiGiuaKy, DiemThiCuoiKy của học sinh và 
+-- các môn học đã có kết quả tương ứng với từng học sinh trong trường.
+select hs.ma_hs, hs.ho_ten_hs, kq.hoc_ky, kq.ma_mh,  kq.diem_thi_giua_ky, kq.diem_thi_cuoi_ky, mh.ma_mh
+from hoc_sinh hs
+join  ket_qua_hoc_tap kq on hs.ma_hs = kq.ma_hs
+inner join mon_hoc mh on kq.ma_mh = mh.ma_mh;
+
+-- c. MaHS, HoTenHS, Hocky, MaMH, TenMH, DiemThiGiuaKy, DiemThiCuoiKy, MaLop, MaGV (phụ trách)
+-- HoTenGV (phụ trách) của học sinh và các môn học đã có kết quả tương ứng với từng học sinh trong trường.
+select hs.ma_hs, hs.ho_ten_hs, kq.hoc_ky, mh.ma_mh, mh.ten_mh, kq.diem_thi_giua_ky, kq.diem_thi_cuoi_ky, lop.ma_lop, lop.ma_gvcn
+from hoc_sinh hs
+join  ket_qua_hoc_tap kq on hs.ma_hs = kq.ma_hs
+join  mon_hoc mh on mh.ma_mh = kq.ma_mh
+join  lop  on lop.ma_lop = hs.ma_lop
+join giao_vien gv on gv.ma_gv = lop.ma_gvcn;
+
+
+-- d. MaHS, HoTenHS, MaLop, MaGVCN, HoTenGV (chủ nhiệm), Hocky, MaMH, TenMH, DiemThiGiuaKy, DiemThiCuoiKy, MaGV (phụ trách), 
+-- HoTenGV (phụ trách) của học sinh và các môn học đã có kết quả tương ứng với từng học sinh trong trường.
+select hs.ma_hs, hs.ho_ten_hs, lop.ma_lop, lop.ma_gvcn, gv.ho_ten_gv, kq.hoc_ky, kq.ma_mh, 
+kq.diem_thi_giua_ky, kq.diem_thi_cuoi_ky, mh.ten_mh, pt.ma_gvpt, gv.ho_ten_gv
+from hoc_sinh hs
+join  lop on hs.ma_lop = lop.ma_lop
+join  giao_vien gv on gv.ma_gv = lop.ma_gvcn
+join  ket_qua_hoc_tap kq  on kq.ma_hs = hs.ma_hs
+join  mon_hoc mh  on mh.ma_mh = kq.ma_mh
+join  phu_trach_bo_mon pt  on pt.ma_mh = mh.ma_mh;
+
+
+
+
+
+-- e. MaHS, HoTenHS, MaLop, MaGVCN, HoTenGV (chủ nhiệm), Hocky, MaMH, TenMH, DiemThiGiuaKy, DiemThiCuoiKy, MaGV (phụ trách), HoTenGV (phụ trách) của những học sinh nữ với các môn học đã có kết quả thi cuối kỳ hoặc giữa kỳ được 9 điểm trở lên.
+-- f. MaHS, HoTenHS, Hocky, MaMH, TenMH, DiemThiGiuaKy, DiemThiCuoiKy, MaLop, MaGV (phụ trách), HoTenGV (phụ trách) của học sinh và các môn học đã có kết quả tương ứng với từng học sinh trong trường. Với điều kiện là chỉ hiển thị những môn học mà giáo viên phụ trách môn đó cũng chính là giáo viên chủ nhiệm của lớp.
 
 
 
