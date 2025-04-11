@@ -1,0 +1,13 @@
+STT	Mệnh đề SQL	Mô tả chức năng
+1️⃣	FROM	Xác định bảng (hoặc bảng kết hợp) để truy vấn dữ liệu
+2️⃣	ON	Điều kiện nối (chỉ dùng với JOIN)
+3️⃣	JOIN 	Thực hiện nối bảng (INNER, LEFT, RIGHT, FULL, v.v.)
+4️⃣	WHERE	Lọc dòng trước khi nhóm (GROUP BY)
+5️⃣	GROUP BY	Gom nhóm các dòng dữ liệu
+6️⃣	HAVING	Lọc nhóm sau khi đã GROUP BY
+7️⃣	SELECT	Chọn các cột hoặc biểu thức (có thể bao gồm hàm tổng hợp như COUNT, SUM)
+8️⃣	DISTINCT	Loại bỏ bản ghi trùng lặp trong kết quả cuối cùng
+9️⃣	ORDER BY	Sắp xếp kết quả
+🔟	LIMIT / OFFSET	Giới hạn số dòng trả về hoặc bỏ qua một số dòng đầu tiên
+
+Truy vấn con (Subquery) truy vấn được nhúng trong truy vấn khác

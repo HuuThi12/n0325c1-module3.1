@@ -232,16 +232,40 @@ join  ket_qua_hoc_tap kq  on kq.ma_hs = hs.ma_hs
 join  mon_hoc mh  on mh.ma_mh = kq.ma_mh
 join  phu_trach_bo_mon pt  on pt.ma_mh = mh.ma_mh;
 
+-- e. MaHS, HoTenHS, MaLop, MaGVCN, HoTenGV (chủ nhiệm), Hocky, MaMH, TenMH, DiemThiGiuaKy, DiemThiCuoiKy, 
+-- MaGV (phụ trách), HoTenGV (phụ trách) của những học sinh nữ với các môn học đã có kết quả thi cuối kỳ hoặc giữa kỳ được 9 điểm trở lên.
+select hs.ma_hs, hs.ho_ten_hs, lop.ma_lop, lop.ma_gvcn, gv.ho_ten_gv, kq.hoc_ky, kq.ma_mh, 
+kq.diem_thi_giua_ky, kq.diem_thi_cuoi_ky, mh.ten_mh, pt.ma_gvpt, gv.ho_ten_gv
+from hoc_sinh hs
+join  lop on hs.ma_lop = lop.ma_lop
+join  giao_vien gv on gv.ma_gv = lop.ma_gvcn
+join  ket_qua_hoc_tap kq  on kq.ma_hs = hs.ma_hs
+join  mon_hoc mh  on mh.ma_mh = kq.ma_mh
+join  phu_trach_bo_mon pt  on pt.ma_mh = mh.ma_mh
+where gioi_tinh = 'Nữ' and (diem_thi_giua_ky >= 9 or diem_thi_cuoi_ky >= 9);
+
+-- f. MaHS, HoTenHS, Hocky, MaMH, TenMH, DiemThiGiuaKy, DiemThiCuoiKy, MaLop, MaGV (phụ trách), HoTenGV (phụ trách) 
+-- của học sinh và các môn học đã có kết quả tương ứng với từng học sinh trong trường. Với điều kiện là chỉ hiển thị
+-- những môn học mà giáo viên phụ trách môn đó cũng chính là giáo viên chủ nhiệm của lớp.
+select hs.ma_hs, hs.ho_ten_hs, kq.ma_mh, mh.ten_mh, kq.diem_thi_giua_ky, kq.diem_thi_cuoi_ky, lop.ma_lop,
+pt.ma_gvpt, gv.ho_ten_gv
+from hoc_sinh hs
+join  ket_qua_hoc_tap kq  on kq.ma_hs = hs.ma_hs
+join  mon_hoc mh  on mh.ma_mh = kq.ma_mh
+join  lop on hs.ma_lop = lop.ma_lop
+join  giao_vien gv on gv.ma_gv = lop.ma_gvcn
+join  phu_trach_bo_mon pt  on pt.ma_mh = mh.ma_mh
+where pt.ma_gvpt is not null ;
 
 
 
-
--- e. MaHS, HoTenHS, MaLop, MaGVCN, HoTenGV (chủ nhiệm), Hocky, MaMH, TenMH, DiemThiGiuaKy, DiemThiCuoiKy, MaGV (phụ trách), HoTenGV (phụ trách) của những học sinh nữ với các môn học đã có kết quả thi cuối kỳ hoặc giữa kỳ được 9 điểm trở lên.
--- f. MaHS, HoTenHS, Hocky, MaMH, TenMH, DiemThiGiuaKy, DiemThiCuoiKy, MaLop, MaGV (phụ trách), HoTenGV (phụ trách) của học sinh và các môn học đã có kết quả tương ứng với từng học sinh trong trường. Với điều kiện là chỉ hiển thị những môn học mà giáo viên phụ trách môn đó cũng chính là giáo viên chủ nhiệm của lớp.
-
-
-
-
+-- g. MaMH, MaLop, HọcKỳ của những môn học đã được thi cuối kỳ vào năm 2023
+-- h. MaMH, MaLop, HọcKỳ của những môn học đã được thi vào tháng 8 năm 2023
+-- i. MaMH, MaLop, HọcKỳ của những môn học đã được thi trước ngày 20 tháng 8 năm 2023
+-- j. MaMH, MaLop, HọcKỳ của những môn học đã được thi trước ngày 20 tháng 8 năm 2023 đúng 1 tuần.
+-- k. MaMH, MaLop, HọcKỳ của những môn học đã được thi sau ngày 20 tháng 8 năm 2023 đúng 21 ngày.
+-- l. MaMH, MaLop, HọcKỳ của những môn học đã được thi trong khoảng từ ngày 10 đến ngày 20 tháng 8 năm 2023.
+-- m. MaMH, MaLop, HọcKỳ của những môn học đã được thi trong khoảng từ 10 giờ 00 phút ngày 10 đến 20 giờ 30 phút ngày 20 tháng 8 năm 2023.
 
 
 

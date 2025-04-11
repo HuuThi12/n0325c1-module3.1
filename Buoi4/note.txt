@@ -1,0 +1,10 @@
+inner join: Lấy phần dữ liệu chung của hai bảng
+left join: Lấy phần dữ liệu dữ liệu của bảng bên trái và phần chung giữa hai bảng
+
+TH1: inner join > left join ( không thể xảy ra )
+TH1: inner join = left join ( khi khóa ngoại không null )
+TH3: inner join < left join ( khi khóa ngoại có null )
+
+where không được đặt sau group by
+
+join = inner join
